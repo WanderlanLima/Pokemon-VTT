@@ -1,0 +1,179 @@
+{
+  "entities": {
+    "MapItem": {
+      "title": "MapItem",
+      "description": "An arena/campaign map definition for the VTT board.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "gridEnabled": { "type": "boolean" },
+        "gridSize": { "type": "number" },
+        "gridColor": { "type": "string" },
+        "gridOpacity": { "type": "number" },
+        "folderId": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "name", "url", "userId"]
+    },
+    "MapFolder": {
+      "title": "MapFolder",
+      "description": "A folder to categorize maps in the sidebar.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "color": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "name", "userId"]
+    },
+    "TrainerFolder": {
+      "title": "TrainerFolder",
+      "description": "A folder to categorize character trainer sheets in the sidebar.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "parentId": { "type": "string" },
+        "color": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "name", "createdAt", "userId"]
+    },
+    "TrainerRecord": {
+      "title": "TrainerRecord",
+      "description": "A character sheet for a Pokémon trainer, holding their attributes, inventory, and Pokémon party.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "image": { "type": "string" },
+        "folderId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "userId": { "type": "string" },
+        "hpCurrent": { "type": "number" },
+        "hpMax": { "type": "number" },
+        "classe": { "type": "string" },
+        "nival": { "type": "number" },
+        "experience": { "type": "string" },
+        "age": { "type": "string" },
+        "height": { "type": "string" },
+        "weight": { "type": "string" },
+        "appearance": { "type": "string" },
+        "history": { "type": "string" },
+        "attributeMethod": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "name", "userId", "createdAt", "updatedAt"]
+    },
+    "TokenItem": {
+      "title": "TokenItem",
+      "description": "A visual token added to the combat map arena.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "size": { "type": "number" },
+        "color": { "type": "string" },
+        "hpCurrent": { "type": "number" },
+        "hpMax": { "type": "number" },
+        "tempHp": { "type": "number" },
+        "trainerId": { "type": "string" },
+        "pokemonId": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "name", "url", "x", "y", "size", "userId"]
+    },
+    "OnlineRoom": {
+      "title": "OnlineRoom",
+      "description": "An online multiplayer VTT table room shared with players.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "dmId": { "type": "string" },
+        "dmName": { "type": "string" },
+        "activeMapId": { "type": "string" },
+        "lastUpdated": { "type": "number" },
+        "campaignName": { "type": "string" }
+      },
+      "required": ["id", "dmId"]
+    },
+    "RoomPlayer": {
+      "title": "RoomPlayer",
+      "description": "A player participant in an active real-time gaming session.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "online": { "type": "boolean" },
+        "lastActive": { "type": "number" }
+      },
+      "required": ["uid", "name", "role", "online", "lastActive"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A real-time text, dice roll or system log message in a session chat room.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderRole": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "type": { "type": "string" }
+      },
+      "required": ["id", "senderId", "senderName", "senderRole", "text", "timestamp", "type"]
+    }
+  },
+  "firestore": {
+    "/rooms/{roomId}": {
+      "schema": { "$ref": "#/entities/OnlineRoom" },
+      "description": "Online real-time board channels."
+    },
+    "/rooms/{roomId}/tokens/{tokenId}": {
+      "schema": { "$ref": "#/entities/TokenItem" },
+      "description": "Combat map tokens synced inside an active gaming room."
+    },
+    "/rooms/{roomId}/players/{uid}": {
+      "schema": { "$ref": "#/entities/RoomPlayer" },
+      "description": "Player presence trackers in real time."
+    },
+    "/rooms/{roomId}/chat/{msgId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Chronological game log and text chat messages."
+    },
+    "/rooms/{roomId}/trainerRecords/{trainerId}": {
+      "schema": { "$ref": "#/entities/TrainerRecord" },
+      "description": "Character sheets loaded/shared by players in the gaming room."
+    },
+    "/maps/{mapId}": {
+      "schema": { "$ref": "#/entities/MapItem" },
+      "description": "List of campaign and combat arena maps."
+    },
+    "/mapFolders/{folderId}": {
+      "schema": { "$ref": "#/entities/MapFolder" },
+      "description": "Map categories folders."
+    },
+    "/trainerFolders/{folderId}": {
+      "schema": { "$ref": "#/entities/TrainerFolder" },
+      "description": "Trainer categorizing folders."
+    },
+    "/trainerRecords/{trainerId}": {
+      "schema": { "$ref": "#/entities/TrainerRecord" },
+      "description": "All permanent trainer records and lists."
+    },
+    "/tokens/{tokenId}": {
+      "schema": { "$ref": "#/entities/TokenItem" },
+      "description": "Active battle grid tokens."
+    }
+  }
+}

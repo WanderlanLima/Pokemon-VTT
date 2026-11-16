@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global general helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Checking if user is GM of a room
+    function isGM(roomId) {
+      return isSignedIn() && exists(/databases/$(database)/documents/rooms/$(roomId)) && get(/databases/$(database)/documents/rooms/$(roomId)).data.dmId == request.auth.uid;
+    }
+
+    // View validation checking ownership or direct permission
+    function canViewEntity(data) {
+      return data.ownerId == request.auth.uid || data.userId == request.auth.uid || 
+        (data.permissions != null && data.permissions.canView != null && (request.auth.uid in data.permissions.canView));
+    }
+
+    // Edit validation checking ownership or direct permission
+    function canEditEntity(data) {
+      return data.ownerId == request.auth.uid || data.userId == request.auth.uid || 
+        (data.permissions != null && data.permissions.canEdit != null && (request.auth.uid in data.permissions.canEdit));
+    }
+
+    // Entity validation functions
+    function isValidMapItem(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.url is string && data.url.size() <= 2048;
+    }
+
+    function isValidMapFolder(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128;
+    }
+
+    function isValidTrainerFolder(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.createdAt is string && data.createdAt.size() <= 128;
+    }
+
+    function isValidTrainerRecord(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.createdAt is string && data.createdAt.size() <= 128
+        && data.updatedAt is string && data.updatedAt.size() <= 128;
+    }
+
+    function isValidTokenItem(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 128
+        && data.url is string && data.url.size() <= 2048
+        && data.x is number
+        && data.y is number
+        && data.size is number;
+    }
+
+    function isValidRoom(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.dmId is string && data.dmId.size() <= 128;
+    }
+
+    // Collection configurations
+    match /rooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(roomId) && incoming().dmId == request.auth.uid && isValidRoom(incoming());
+      allow update: if isSignedIn() && isValidId(roomId);
+      allow delete: if isSignedIn() && isValidId(roomId) && existing().dmId == request.auth.uid;
+
+      match /tokens/{tokenId} {
+        allow read: if isSignedIn() && (isGM(roomId) || canViewEntity(existing()));
+        allow create: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || incoming().ownerId == request.auth.uid || incoming().userId == request.auth.uid);
+        allow update: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || canEditEntity(existing()));
+        allow delete: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || existing().ownerId == request.auth.uid || existing().userId == request.auth.uid);
+      }
+
+      match /players/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && isValidId(roomId);
+      }
+
+      match /chat/{msgId} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && isValidId(roomId);
+      }
+
+      match /trainerRecords/{trainerId} {
+        allow read: if isSignedIn() && (isGM(roomId) || canViewEntity(existing()));
+        allow create: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || incoming().ownerId == request.auth.uid || incoming().userId == request.auth.uid);
+        allow update: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || canEditEntity(existing()));
+        allow delete: if isSignedIn() && isValidId(roomId) && (isGM(roomId) || existing().ownerId == request.auth.uid || existing().userId == request.auth.uid);
+      }
+    }
+
+    match /maps/{mapId} {
+      allow read: if isSignedIn() && canViewEntity(resource.data);
+      allow create: if isSignedIn() && isValidId(mapId) && (incoming().userId == request.auth.uid || incoming().ownerId == request.auth.uid) && isValidMapItem(incoming());
+      allow update: if isSignedIn() && isValidId(mapId) && canEditEntity(existing()) && isValidMapItem(incoming());
+      allow delete: if isSignedIn() && isValidId(mapId) && canEditEntity(existing());
+    }
+
+    match /mapFolders/{folderId} {
+      allow read: if isSignedIn() && canViewEntity(resource.data);
+      allow create: if isSignedIn() && isValidId(folderId) && (incoming().userId == request.auth.uid || incoming().ownerId == request.auth.uid) && isValidMapFolder(incoming());
+      allow update: if isSignedIn() && isValidId(folderId) && canEditEntity(existing()) && isValidMapFolder(incoming());
+      allow delete: if isSignedIn() && isValidId(folderId) && canEditEntity(existing());
+    }
+
+    match /trainerFolders/{folderId} {
+      allow read: if isSignedIn() && canViewEntity(resource.data);
+      allow create: if isSignedIn() && isValidId(folderId) && (incoming().userId == request.auth.uid || incoming().ownerId == request.auth.uid) && isValidTrainerFolder(incoming());
+      allow update: if isSignedIn() && isValidId(folderId) && canEditEntity(existing()) && isValidTrainerFolder(incoming());
+      allow delete: if isSignedIn() && isValidId(folderId) && canEditEntity(existing());
+    }
+
+    match /trainerRecords/{trainerId} {
+      allow read: if isSignedIn() && canViewEntity(resource.data);
+      allow create: if isSignedIn() && isValidId(trainerId) && (incoming().userId == request.auth.uid || incoming().ownerId == request.auth.uid) && isValidTrainerRecord(incoming());
+      allow update: if isSignedIn() && isValidId(trainerId) && canEditEntity(existing()) && isValidTrainerRecord(incoming());
+      allow delete: if isSignedIn() && isValidId(trainerId) && canEditEntity(existing());
+    }
+
+    match /tokens/{tokenId} {
+      allow read: if isSignedIn() && canViewEntity(resource.data);
+      allow create: if isSignedIn() && isValidId(tokenId) && (incoming().userId == request.auth.uid || incoming().ownerId == request.auth.uid) && isValidTokenItem(incoming());
+      allow update: if isSignedIn() && isValidId(tokenId) && canEditEntity(existing()) && isValidTokenItem(incoming());
+      allow delete: if isSignedIn() && isValidId(tokenId) && canEditEntity(existing());
+    }
+  }
+}

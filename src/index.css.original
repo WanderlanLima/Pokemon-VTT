@@ -1,0 +1,521 @@
+@import "tailwindcss";
+
+/* 20 ROLEPLAYING RPG ANIMATED AURAS & PARTICLE SYSTEMS */
+
+/* Perfect high-performance drop-shadow for transparent RPG sprites */
+.token-transparency-shadow {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.55));
+  transition: filter 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+.token-transparency-shadow:hover {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+.token-transparency-shadow-selected {
+  filter: drop-shadow(0 0 14px var(--token-glow-color, #ffffff)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* Base Overlay container of an animated aura */
+.aura-overlay {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 1. Fogo Infernal (Hellfire) */
+.aura-hellfire {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #ef4444) 18%, transparent) 30%, transparent 70%);
+  border: 2px solid color-mix(in srgb, var(--aura-color, #ef4444) 60%, transparent);
+  box-shadow: 0 0 20px 8px var(--aura-color, #ef4444), inset 0 0 15px color-mix(in srgb, var(--aura-color, #ef4444) 40%, transparent);
+  animation: aura-hellfire-pulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes aura-hellfire-pulse {
+  0% { transform: scale(1); filter: brightness(1) saturate(1); }
+  100% { transform: scale(1.08); filter: brightness(1.3) saturate(1.25); }
+}
+
+/* 2. Calota Glacial (Glacial Guard) */
+.aura-glacial {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #38bdf8) 12%, transparent) 20%, transparent 70%);
+  border: 2.5px dashed color-mix(in srgb, var(--aura-color, #38bdf8) 70%, transparent);
+  box-shadow: 0 0 18px 5px color-mix(in srgb, var(--aura-color, #38bdf8) 50%, transparent), inset 0 0 12px rgba(255, 255, 255, 0.2);
+  animation: aura-glacial-spin 12s linear infinite;
+}
+@keyframes aura-glacial-spin {
+  0% { transform: rotate(0deg) scale(0.98); }
+  50% { transform: rotate(180deg) scale(1.04); }
+  100% { transform: rotate(360deg) scale(0.98); }
+}
+
+/* 3. Tempestade Estática (Static Storm) */
+.aura-lightning {
+  border: 1.5px solid color-mix(in srgb, var(--aura-color, #22d3ee) 50%, transparent);
+  box-shadow: 0 0 24px 4px var(--aura-color, #22d3ee), 0 0 8px 1px rgba(255, 255, 255, 0.82);
+  animation: aura-lightning-crack 0.4s steps(3) infinite;
+}
+@keyframes aura-lightning-crack {
+  0%, 100% { opacity: 0.6; transform: scale(1.02); filter: saturate(1); }
+  33% { opacity: 1; transform: scale(1.1) rotate(4deg); filter: brightness(1.4); }
+  66% { opacity: 0.8; transform: scale(0.97) rotate(-3deg); filter: brightness(0.9); }
+}
+
+/* 4. Florescência Silvestre (Druid Bloom) */
+.aura-druidic {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #4ade80) 15%, transparent) 30%, transparent 70%);
+  border: 2px dotted color-mix(in srgb, var(--aura-color, #4ade80) 60%, transparent);
+  box-shadow: 0 0 16px 6px color-mix(in srgb, var(--aura-color, #4ade80) 50%, transparent), inset 0 0 8px rgba(255, 255, 255, 0.1);
+  animation: aura-nature-pulse 2.2s ease-in-out infinite alternate;
+}
+@keyframes aura-nature-pulse {
+  0% { transform: scale(0.99) rotate(0deg); }
+  100% { transform: scale(1.06) rotate(15deg); }
+}
+
+/* 5. Santuário Divino (Holy Sanctuary) */
+.aura-holy-sanctuary {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #eab308) 12%, transparent) 20%, transparent 80%);
+  border: 3px double color-mix(in srgb, var(--aura-color, #eab308) 70%, transparent);
+  box-shadow: 0 0 25px 8px color-mix(in srgb, var(--aura-color, #eab308) 60%, transparent), inset 0 0 15px rgba(255, 255, 255, 0.3);
+  animation: aura-holy-breath 1.8s ease-in-out infinite;
+}
+@keyframes aura-holy-breath {
+  0%, 100% { transform: scale(0.98); opacity: 0.85; }
+  50% { transform: scale(1.07); opacity: 1; box-shadow: 0 0 30px 12px color-mix(in srgb, var(--aura-color, #eab308) 80%, transparent); }
+}
+
+/* 6. Olhar do Vazio (Void Abyss) */
+.aura-abyssal {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #a855f7) 20%, transparent) 30%, transparent 70%);
+  box-shadow: 0 0 22px 8px color-mix(in srgb, var(--aura-color, #a855f7) 70%, transparent), inset 0 0 16px rgba(0, 0, 0, 0.8);
+  border: 2px solid color-mix(in srgb, var(--aura-color, #a855f7) 40%, transparent);
+  animation: aura-abyssal-wiggle 3s ease-in-out infinite alternate;
+}
+@keyframes aura-abyssal-wiggle {
+  0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg); }
+  100% { transform: scale(1.08) rotate(45deg); filter: hue-rotate(30deg); }
+}
+
+/* 7. Peste Necrótica (Lich Decay) */
+.aura-lich-decay {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #84cc16) 18%, transparent) 20%, transparent 80%);
+  box-shadow: 0 0 20px 6px color-mix(in srgb, var(--aura-color, #84cc16) 65%, transparent), 0 0 10px rgba(14, 116, 144, 0.3);
+  border: 1.5px solid color-mix(in srgb, var(--aura-color, #84cc16) 50%, transparent);
+  animation: aura-lich-wobble 2.5s ease-in-out infinite;
+}
+@keyframes aura-lich-wobble {
+  0%, 100% { transform: scale(1) skewX(0deg) skewY(0deg); }
+  33% { transform: scale(1.04) skewX(2deg) skewY(-2deg); }
+  66% { transform: scale(0.97) skewX(-2deg) skewY(2deg); }
+}
+
+/* 8. Rúnico Temporal (Chrono Runes) */
+.aura-chrono-runes {
+  border: 1px dashed color-mix(in srgb, var(--aura-color, #fbbf24) 60%, transparent);
+  box-shadow: 0 0 18px 4px color-mix(in srgb, var(--aura-color, #fbbf24) 50%, transparent);
+  animation: aura-chrono-spin 18s linear infinite;
+}
+@keyframes aura-chrono-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 9. Fogo Fátuo (Will-o'-Wisp) */
+.aura-will-o-wisp {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #06b6d4) 10%, transparent) 40%, transparent 75%);
+  box-shadow: 0 0 20px 5px color-mix(in srgb, var(--aura-color, #06b6d4) 60%, transparent);
+  animation: aura-wisp-drift 4s ease-in-out infinite alternate;
+}
+@keyframes aura-wisp-drift {
+  0% { transform: scale(1) translate(0px, 0px); }
+  50% { transform: scale(1.06) translate(3px, -3px); }
+  100% { transform: scale(0.98) translate(-3px, 3px); }
+}
+
+/* 10. Chama Sideral (Starfire) */
+.aura-starfire {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #e0f2fe) 15%, transparent) 30%, transparent 70%);
+  box-shadow: 0 0 18px 6px color-mix(in srgb, var(--aura-color, #e0f2fe) 50%, transparent), 0 0 10px rgba(125, 211, 252, 0.3);
+  border: 1px solid color-mix(in srgb, var(--aura-color, #e0f2fe) 50%, transparent);
+  animation: aura-starfire-pulse 2s ease-in-out infinite alternate;
+}
+@keyframes aura-starfire-pulse {
+  0% { transform: scale(0.98); opacity: 0.8; }
+  100% { transform: scale(1.06); opacity: 1; }
+}
+
+/* 11. Barreira Égide (Aegis Shield) */
+.aura-aegis-shield {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #2563eb) 15%, transparent) 40%, transparent 80%);
+  border: 2px solid color-mix(in srgb, var(--aura-color, #2563eb) 80%, transparent);
+  box-shadow: 0 0 25px 4px color-mix(in srgb, var(--aura-color, #2563eb) 70%, transparent), inset 0 0 15px color-mix(in srgb, var(--aura-color, #2563eb) 50%, transparent);
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  animation: aura-aegis-pulsate 1.6s ease-in-out infinite alternate;
+}
+@keyframes aura-aegis-pulsate {
+  0% { transform: scale(0.97); filter: drop-shadow(0 0 2px rgba(37,99,235,0.5)); }
+  100% { transform: scale(1.04); filter: drop-shadow(0 0 12px rgba(37,99,235,0.9)); }
+}
+
+/* 12. Fúria Vampírica (Vampiric Berserk) */
+.aura-berserk {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #dc2626) 20%, transparent) 30%, transparent 70%);
+  border: 2.5px solid color-mix(in srgb, var(--aura-color, #dc2626) 75%, transparent);
+  box-shadow: 0 0 22px 6px color-mix(in srgb, var(--aura-color, #dc2626) 80%, transparent), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: aura-berserk-heartbeat 0.9s ease-in-out infinite;
+}
+@keyframes aura-berserk-heartbeat {
+  0% { transform: scale(1); box-shadow: 0 0 22px 6px rgba(220, 38, 38, 0.8); }
+  25% { transform: scale(1.08); box-shadow: 0 0 28px 10px rgba(220, 38, 38, 1); }
+  45% { transform: scale(1.02); box-shadow: 0 0 24px 7px rgba(220, 38, 38, 0.8); }
+  65% { transform: scale(1.07); box-shadow: 0 0 26px 9px rgba(220, 38, 38, 0.9); }
+  100% { transform: scale(1); box-shadow: 0 0 22px 6px rgba(220, 38, 38, 0.8); }
+}
+
+/* 13. Tempestade de Areia (Sandstorm) */
+.aura-sandstorm {
+  border: 2px solid color-mix(in srgb, var(--aura-color, #f59e0b) 50%, transparent);
+  box-shadow: 0 0 16px 5px color-mix(in srgb, var(--aura-color, #f59e0b) 55%, transparent);
+  animation: aura-sandstorm-spin 5s linear infinite;
+}
+@keyframes aura-sandstorm-spin {
+  0% { transform: rotate(0deg) scale(0.97); filter: blur(0.5px); }
+  50% { transform: rotate(180deg) scale(1.05); filter: blur(1.5px); }
+  100% { transform: rotate(360deg) scale(0.97); filter: blur(0.5px); }
+}
+
+/* 14. Lodo Ácido (Toxic Bubbles) */
+.aura-toxic {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #22c55e) 15%, transparent) 30%, transparent 80%);
+  border: 2px dashed color-mix(in srgb, var(--aura-color, #22c55e) 55%, transparent);
+  box-shadow: 0 0 18px 4px color-mix(in srgb, var(--aura-color, #22c55e) 60%, transparent);
+  animation: aura-toxic-wiggle 3s ease-in-out infinite alternate;
+}
+@keyframes aura-toxic-wiggle {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.06) rotate(30deg); }
+}
+
+/* 15. Escudo Psiônico (Psionic Shield) */
+.aura-psionic {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #ec4899) 15%, transparent) 40%, transparent 75%);
+  border: 1.5px solid color-mix(in srgb, var(--aura-color, #ec4899) 70%, transparent);
+  box-shadow: 0 0 26px 8px color-mix(in srgb, var(--aura-color, #ec4899) 75%, transparent), inset 0 0 12px color-mix(in srgb, var(--aura-color, #ec4899) 40%, transparent);
+  animation: aura-psionic-resonance 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+@keyframes aura-psionic-resonance {
+  0% { transform: scale(0.98); opacity: 0.7; box-shadow: 0 0 15px 4px rgba(236, 72, 153, 0.5); }
+  50% { transform: scale(1.07); opacity: 1; box-shadow: 0 0 32px 10px rgba(236, 72, 153, 0.8); }
+  100% { transform: scale(0.98); opacity: 0.7; box-shadow: 0 0 15px 4px rgba(236, 72, 153, 0.5); }
+}
+
+/* 16. Forja de Lava (Molten Hearth) */
+.aura-molten {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #f97316) 18%, transparent) 20%, transparent 75%);
+  border-bottom: 3.5px solid color-mix(in srgb, var(--aura-color, #f97316) 80%, transparent);
+  box-shadow: 0 8px 24px -4px color-mix(in srgb, var(--aura-color, #f97316) 70%, transparent), 0 0 12px rgba(249, 115, 22, 0.3);
+  animation: aura-molten-heat 2s ease-in-out infinite alternate;
+}
+@keyframes aura-molten-heat {
+  0% { transform: scale(0.99) rotate(-1deg); }
+  100% { transform: scale(1.05) rotate(1deg); }
+}
+
+/* 17. Fluxo das Marés (Tidal Ripples) */
+.aura-tidal {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #0284c7) 12%, transparent) 30%, transparent 75%);
+  border: 2px solid color-mix(in srgb, var(--aura-color, #0284c7) 50%, transparent);
+  box-shadow: 0 0 20px 4px color-mix(in srgb, var(--aura-color, #0284c7) 55%, transparent);
+  animation: aura-tidal-expand 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes aura-tidal-expand {
+  0% { transform: scale(0.95); opacity: 0.9; box-shadow: 0 0 10px 2px rgba(2, 132, 199, 0.4); }
+  50% { transform: scale(1.08); opacity: 0.7; box-shadow: 0 0 24px 6px rgba(2, 132, 199, 0.6); }
+  100% { transform: scale(1.1); opacity: 0; box-shadow: 0 0 30px 10px rgba(2, 132, 199, 0); }
+}
+
+/* 18. Grade Sintética (Cyberpunk Grid) */
+.aura-cybergrid {
+  border: 2px solid color-mix(in srgb, var(--aura-color, #d946ef) 80%, transparent);
+  box-shadow: 0 0 18px var(--aura-color, #d946ef), inset 0 0 10px color-mix(in srgb, var(--aura-color, #d946ef) 40%, transparent);
+  animation: aura-cyber-glitch 2s linear infinite;
+}
+@keyframes aura-cyber-glitch {
+  0%, 100% { border-color: color-mix(in srgb, var(--aura-color, #d946ef) 90%, transparent); box-shadow: 0 0 18px var(--aura-color, #d946ef); }
+  50% { border-color: #ffffff; box-shadow: 0 0 22px var(--aura-color, #d946ef); transform: scale(1.04); }
+}
+
+/* 19. Névoa Espectral (Spooky Specter) */
+.aura-specter {
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura-color, #f8fafc) 15%, transparent) 30%, transparent 80%);
+  border: 1.5px solid color-mix(in srgb, var(--aura-color, #f8fafc) 40%, transparent);
+  box-shadow: 0 0 22px 6px color-mix(in srgb, var(--aura-color, #f8fafc) 50%, transparent), inset 0 0 10px rgba(255,255,255,0.2);
+  filter: blur(0.5px);
+  animation: aura-specter-float 3.5s ease-in-out infinite alternate;
+}
+@keyframes aura-specter-float {
+  0% { transform: scale(1) translate(0, 0); filter: drop-shadow(0 0 2px rgba(255,255,255,0.2)); }
+  100% { transform: scale(1.08) translate(1px, -4px); filter: drop-shadow(0 0 12px rgba(255,255,255,0.6)); }
+}
+
+/* 20. Prisma Cromático (Rainbow Magic) */
+.aura-rainbow {
+  border: 2.5px solid var(--aura-color, #3b82f6);
+  box-shadow: 0 0 20px 5px var(--aura-color, #3b82f6);
+  animation: aura-rainbow-shift 6s linear infinite;
+}
+@keyframes aura-rainbow-shift {
+  0% { filter: hue-rotate(0deg) saturate(1.2); transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { filter: hue-rotate(360deg) saturate(1.2); transform: scale(1); }
+}
+
+
+/* DYNAMIC CSS PARTICLE ENGINE */
+
+.aura-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  animation-fill-mode: forwards;
+}
+
+/* Particle Type 1: Embers (Fogo / Lava / Areia) */
+.particle-ember {
+  background: var(--aura-color, #f97316);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--aura-color, #ef4444) 80%, transparent);
+  opacity: 0.8;
+  animation: particle-ember-rise 1.6s ease-out infinite;
+}
+@keyframes particle-ember-rise {
+  0% {
+    transform: translateY(15px) translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-25px) translateX(var(--px-offset, 10px)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Particle Type 2: Bubbles (Lodo / Veneno / Necrótico) */
+.particle-bubble {
+  background: color-mix(in srgb, var(--aura-color, #22c55e) 55%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4);
+  animation: particle-bubble-float 2.2s ease-in-out infinite;
+}
+@keyframes particle-bubble-float {
+  0% {
+    transform: translateY(12px) translateX(0) scale(0.4);
+    opacity: 0;
+  }
+  15% { opacity: 0.9; }
+  80% { opacity: 0.9; }
+  100% {
+    transform: translateY(-30px) translateX(var(--px-offset, -12px)) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Particle Type 3: Snowy Crystals */
+.particle-snowflake {
+  background: #ffffff;
+  box-shadow: 0 0 4px var(--aura-color, #38bdf8);
+  opacity: 0.9;
+  animation: particle-snow-drift 3s linear infinite;
+}
+@keyframes particle-snow-drift {
+  0% {
+    transform: translateY(-30px) translateX(var(--px-offset, -10px)) scale(0);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  100% {
+    transform: translateY(20px) translateX(var(--px-offset-end, 15px)) rotate(180deg) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Particle Type 4: Runes (Glyphs) */
+.particle-rune {
+  color: var(--aura-color, #fbbf24);
+  font-family: monospace;
+  font-size: 8px;
+  font-weight: bold;
+  animation: particle-rune-orbit 5s linear infinite;
+}
+@keyframes particle-rune-orbit {
+  0% {
+    transform: rotate(var(--p-angle, 0deg)) translate(var(--p-radius, 34px)) rotate(0deg);
+    opacity: 0;
+  }
+  15%, 85% { opacity: 1; }
+  100% {
+    transform: rotate(calc(var(--p-angle, 0deg) + 360deg)) translate(var(--p-radius, 34px)) rotate(-360deg);
+    opacity: 0;
+  }
+}
+
+/* Particle Type 5: Orbiting Wisps/Spirits */
+.particle-spirit {
+  background: var(--aura-color, #22d3ee);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--aura-color, #22d3ee) 80%, transparent);
+  opacity: 0.9;
+  animation: particle-spirit-swim 4s ease-in-out infinite;
+}
+@keyframes particle-spirit-swim {
+  0% {
+    transform: rotate(var(--p-angle, 0deg)) translate(var(--p-radius, 32px)) scale(0.7);
+  }
+  50% {
+    transform: rotate(calc(var(--p-angle, 0deg) + 180deg)) translate(calc(var(--p-radius, 32px) + 6px)) scale(1.1);
+  }
+  100% {
+    transform: rotate(calc(var(--p-angle, 0deg) + 360deg)) translate(var(--p-radius, 32px)) scale(0.7);
+  }
+}
+
+/* Particle Type 6: Floating Leaves */
+.particle-leaf {
+  background: var(--aura-color, #22c55e);
+  border-radius: 999px 0 999px 0;
+  opacity: 0.85;
+  animation: particle-leaf-float 2.8s ease-in-out infinite;
+}
+@keyframes particle-leaf-float {
+  0% {
+    transform: translateY(20px) translateX(0) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  20% { opacity: 1; }
+  100% {
+    transform: translateY(-25px) translateX(var(--px-offset, -15px)) rotate(280deg) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Particle Type 7: Sparking Stars */
+.particle-star {
+  background: #ffffff;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 6px var(--aura-color, #e0f2fe);
+  animation: particle-star-sparkle 1.8s ease-in-out infinite;
+}
+@keyframes particle-star-sparkle {
+  0%, 100% {
+    transform: translate(var(--px-offset, 0px), var(--py-offset, 0px)) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(var(--px-offset, 0px), var(--py-offset, 0px)) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Custom Scrollbar for Token Selection Menu */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+
+/* POKEBALL SUMMON AND RECALL VTT VISUAL EFFECTS */
+
+@keyframes pokeball-summon-pulse {
+  0% { 
+    transform: scale(0.2); 
+    opacity: 1; 
+    border-width: 8px; 
+    box-shadow: 0 0 0px var(--summon-color-primary, #ef4444), inset 0 0 0px #ffffff;
+  }
+  50% { 
+    opacity: 1; 
+  }
+  100% { 
+    transform: scale(2.8); 
+    opacity: 0; 
+    border-width: 1px; 
+    box-shadow: 0 0 40px 15px rgba(239, 68, 68, 0), inset 0 0 25px 10px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes pokeball-summon-beam {
+  0% { 
+    transform: scaleX(0.1) scaleY(0); 
+    opacity: 0.1; 
+  }
+  25% { 
+    transform: scaleX(1.4) scaleY(1.4); 
+    opacity: 1; 
+  }
+  70% { 
+    transform: scaleX(0.8) scaleY(1.1); 
+    opacity: 0.85; 
+  }
+  100% { 
+    transform: scaleX(0) scaleY(0.6); 
+    opacity: 0; 
+  }
+}
+
+@keyframes pokeball-recall-pull {
+  0% { 
+    transform: scale(1); 
+    opacity: 1; 
+    filter: brightness(1) saturate(1) contrast(1);
+    box-shadow: 0 0 0px rgba(239, 68, 68, 0);
+  }
+  35% { 
+    transform: scale(1.2); 
+    opacity: 0.95; 
+    filter: brightness(2) saturate(0.2) contrast(1.5) sepia(1) hue-rotate(-50deg);
+    box-shadow: 0 0 25px 12px rgba(239, 68, 68, 0.85);
+  }
+  100% { 
+    transform: scale(0); 
+    opacity: 0; 
+    filter: brightness(6) sepia(1) hue-rotate(-50deg);
+    box-shadow: 0 0 35px 20px rgba(239, 68, 68, 1);
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-summon-pulse {
+  animation: pokeball-summon-pulse 0.75s cubic-bezier(0.1, 0.8, 0.35, 1) forwards;
+}
+
+.animate-summon-beam {
+  animation: pokeball-summon-beam 0.65s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+}
+
+.animate-recall-pull {
+  animation: pokeball-recall-pull 0.7s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.animate-float-gentle {
+  animation: float-gentle 2.5s ease-in-out infinite;
+}
+
